@@ -1,0 +1,150 @@
+USER GUIDE
+
+1. Github link
+2. Running environment
+3. How to run
+4. Input
+5. Output
+6. Background
+7. Limits
+
+1. Github link
+       https://github.com/jerryctnbio/myAnnotator
+
+2. Running environment
+   2.1 This tool works with python 3. Tested on 3.7.7 with centos 7
+   2.2 It runs a local vep. tested on vep version 100.
+   2.3 vep has to be in the $Path environment variable.
+   2.4 vep is short for "Variant Effect Predictor". It is a tool from 
+       Ensembl and can be obtained from the following address:
+     
+         http://uswest.ensembl.org/info/docs/tools/vep/index.html
+
+   2.5 This tool works with local genome cache files and completely offline.
+   2.6 One can download the cache tar balls from the following address. 
+       follow the manual download instruction there. You need GRCh37 for
+       this challenge. 
+   
+       https://uswest.ensembl.org/info/docs/tools/vep/script/vep_cache.html
+
+3. How to run
+   3.1 Clone the repo into a local directory, say, 'test'
+
+       git clone url_of_the_repo test
+       cd test
+
+   3.2 Issue the following command
+
+           ./python myAnnotator2.py -i x.vcf
+
+   3.3 A more complete usegae below. One can also issue the following 
+       command to see the usage.
+
+           ./python myAnnotator2.py -h
+
+
+       Usage:
+
+           -i x.vcf
+              required.
+              the input vcf file.
+           -o x.annatations.tsv
+              optional.
+              the output tsv file. If not specified, it will match to the
+              input file. For example, input=x.cvf, output=x.annotations.tsv
+           -f False
+              optional.
+              whether to filter out variants failed FILTER in vcf file. If
+              not specified, it is set to False.
+           -s None
+              optional.
+              the variant severity level file. This is a tab delimited two
+              column file with a **required** first header line. Comment
+              lines are allowed starting with '#'. The first
+              column is the variant consequence. The second column is the
+              corresponding severity level (integer from 1 up). The lower
+              the level the more severe the variant is. This is based 
+              on Ensembl website as below.
+
+https://uswest.ensembl.org/info/genome/variation/prediction/predicted_data.html#consequences
+
+              If not specified, it is **assumed** that a file named
+              "myAnnotator.severity.txt" is in the current working directory.
+
+           -g GRCh37
+              optional. Either 'GRCh37' or 'GRCh38', nothing else.
+              human genome version.
+              defaults to GRCh37 to match the challenge.
+           -c None
+              optional.
+              defaults to whatever local vep points.
+           
+4. Input
+   The input is a VCF file.
+
+5. Output
+   The output is a tab delimited text file with the following columns.
+
+   5.1 The following five (5) columns are exactly the same as in the VCF
+       file.
+     
+        column 1: Chr
+        column 2: Pos
+        column 3: ID
+        column 4: Ref
+        column 5: Alt
+
+   5.2 The next columns are about the depth and reference allele
+
+        column 6: Gene symbol
+        column 7: Depth
+        column 8: Reference allele count
+        column 9: Reference allele percentage
+
+   5.3 The next columns are for all the alternate alleles. All of the
+       information for the alternate alleles are grouped together in one
+       column separated by comma. For example, '18,34' denotes two alternate
+       alleles with counts as 18 and 34, respectively.
+
+        column 10: All alternate allele counts
+        column 11: All alternate allele percentages
+
+   5.4 The next columns are for the most severe allele
+
+        column 12: Variant class, such as 'snv'
+        column 13: Allele frequency from ExAC. If no entry in the database,
+                   it is set to 'allele_freq_not_in_ExAC'.
+        column 14: The most deleterious effect of the variant
+
+6. Background
+
+      This script annotates variants in a VCF file. Besides the depth, read
+   count information directly from the VCF file, it also queries the ExAC 
+   database (http://exac.hms.harvard.edu) for minor allele frequency. The 
+   variant effect is obtained by running a local vep program (see section2).
+   Only the most deleterious effect is kept in the output for each variant
+   in the VCF file. This applies whether the variant matches to multiple 
+   transcripts or the variant has multiple alternate alleles, or both. See
+   example below.
+
+      The variant '3       49397819        .       GCAAAG  GAAAAA,AAAAAA' is
+   a variant on chromosome 3 at position 49397819. The reference allele is
+   'GCAAAG'. It has two alternate alleles 'GAAAAA' and 'AAAAAA'. 
+   
+      The first alternate allele 'GAAAAA' matches to five(5) transcripts, 
+   each of which has a corresponding consequence, e.g., 'intron_variant'. The
+   other alternate allele 'AAAAAA' also matches to five(5) transcripts with
+   their consequences.
+ 
+      All of the ten (10) consequences are compared and the most severe one
+   is picked. The detailed information about that alternate allele is output,
+   such as frequency from ExAC, consequence, variation type.   
+
+7. Limits
+   
+   7.1 This tool queries the ExAC database. The better way to query the ExAC
+       database would be to query in a bulk fashion. 
+       First collect all the variants, divide them into 
+       big chucks, say 1000 variants, and then query one chunk at a time. 
+       Unfortunately, the ExAC database always gave 405 error when using
+       bulk query. In the end, this was implemented one variant at a time.  
