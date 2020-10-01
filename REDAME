@@ -28,10 +28,10 @@ USER GUIDE
        https://uswest.ensembl.org/info/docs/tools/vep/script/vep_cache.html
 
 3. How to run
-   3.1 Clone the repo into a local directory, say, 'test'
+   3.1 Clone the repo into a local directory, say, 'try'
 
-       git clone url_of_the_repo test
-       cd test
+       git clone https://github.com/jerryctnbio/myAnnotator try
+       cd try
 
    3.2 Issue the following command
 
