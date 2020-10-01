@@ -1,0 +1,46 @@
+Variant_Consequence	Severity_Level
+# this is based on information from Ensembl web site.
+#
+# https://uswest.ensembl.org/info/genome/variation/prediction/predicted_data.html#consequences
+#
+# the level is positive integer. The lower it is the higher the risk
+# below are 'high' risk ones
+transcript_ablation	1
+splice_acceptor_variant	2
+splice_donor_variant	3
+stop_gained	4
+frameshift_variant	5
+stop_lost	6
+start_lost	7
+transcript_amplification	8
+# down below are 'moderate' risk ones
+inframe_insertion	9
+inframe_deletion	10
+missense_variant	11
+protein_altering_variant	12
+# down below are 'low' risk ones
+splice_region_variant	13
+incomplete_terminal_codon_variant	14
+start_retained_variant	15
+stop_retained_variant	16
+synonymous_variant	17
+# down below are 'modifier' risk
+coding_sequence_variant	18
+mature_miRNA_variant	19
+5_prime_UTR_variant	20
+3_prime_UTR_variant	21
+non_coding_transcript_exon_variant	22
+intron_variant	23
+NMD_transcript_variant	24
+non_coding_transcript_variant	25
+upstream_gene_variant	26
+downstream_gene_variant	27
+TFBS_ablation	28
+TFBS_amplification	29
+TF_binding_site_variant	30
+regulatory_region_ablation	31
+regulatory_region_amplification	32
+feature_elongation	33
+regulatory_region_variant	34
+feature_truncation	35
+intergenic_variant	36
